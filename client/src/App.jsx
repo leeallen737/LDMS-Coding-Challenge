@@ -1,5 +1,6 @@
 import React from 'react'
 import "./App.scss";
+import Note from './Components/Note'
 // const { createProxyMiddleware } = require('http-proxy-middleware');
 function App() {
   // const apiProxy = createProxyMiddleware({
@@ -18,16 +19,17 @@ function App() {
   //   }  
 
   //   myFunction()
+  const [lessThanSixMonths, updateLessThansixMonths] = React.useState(false)
   const [myNotes, updateMyNotes] = React.useState([
     {
       "id": 29,
-      "createdAt": "2021-07-17T18:04:38.040Z",
+      "createdAt": "2021-11-17T18:04:38.040Z",
       "user": "Hoyt Braun",
       "note": "Sit iusto odit amet itaque sequi error laudantium fugit aperiam accusamus et mollitia est et necessitatibus iusto maxime sunt sed incidunt ut saepe quidem aspernatur modi consectetur illum qui vero."
     },
     {
       "id": 30,
-      "createdAt": "2021-07-17T18:04:38.040Z",
+      "createdAt": "2022-01-17T18:04:38.040Z",
       "user": "David Braun",
       "note": "Sit iusto odit amet itaque sequi error laudantium fugit aperiam accusamus et mollitia est et necessitatibus iusto maxime sunt sed incidunt ut saepe quidem aspernatur modi consectetur illum qui vero."
     },
@@ -46,18 +48,42 @@ function App() {
   ])
 
 
+  
+  let sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+  const compareSixMonths = sixMonthsAgo.toLocaleDateString(
+    'en-gb',
+    {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }
+  );
+
+  const myFilteredNotes = myNotes.filter((filteredNote) => {
+    return Date.parse(filteredNote.createdAt) > Date.parse(compareSixMonths)
+  })
+
+
+  console.log(myFilteredNotes)
+
   return (
     <div className="App">
-      {myNotes.map((note) => {
+      { lessThanSixMonths ? myFilteredNotes.map((note) => {
+        
           return (
-          
-          <div key={note.id} className="my-note">
-          <h3>{note.createdAt}</h3>
-          <h3>{note.user}</h3>
-          <p>{note.note}</p>
-          </div>
+          <Note key={note.id} note={note} />
           )
-        })}
+        }) 
+      :
+      myNotes.map((note) => {
+        
+        return (
+        <Note key={note.id} note={note} />
+        )
+      }) 
+      }
     </div>
   );
 }

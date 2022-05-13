@@ -1,6 +1,7 @@
 import React from 'react'
 import "./App.scss";
 import Note from './Components/Note'
+import Button from './Components/ToggleButton';
 // const { createProxyMiddleware } = require('http-proxy-middleware');
 function App() {
   // const apiProxy = createProxyMiddleware({
@@ -73,11 +74,8 @@ function App() {
 
   return (
     <div className="App">
-      <header>
-        <nav>
-          <button onClick={toggleNotes}>{lessThanSixMonths ? 'All Notes' : 'Last 6 Months'}</button>
-        </nav>
-      </header>
+      
+      <Button toggleNotes={toggleNotes} timeScale={lessThanSixMonths}/>
       
       <div className="notes">
           { lessThanSixMonths ? myFilteredNotes.map((note) => {

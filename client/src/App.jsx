@@ -65,25 +65,37 @@ function App() {
     return Date.parse(filteredNote.createdAt) > Date.parse(compareSixMonths)
   })
 
-
+  const toggleNotes = () => {
+    updateLessThansixMonths(prevState => !prevState)
+    console.log(lessThanSixMonths)
+  }
   console.log(myFilteredNotes)
 
   return (
     <div className="App">
-      { lessThanSixMonths ? myFilteredNotes.map((note) => {
-        
+      <header>
+        <nav>
+          <button onClick={toggleNotes}>{lessThanSixMonths ? 'All Notes' : 'Last 6 Months'}</button>
+        </nav>
+      </header>
+      
+      <div className="notes">
+          { lessThanSixMonths ? myFilteredNotes.map((note) => {
+            
+            return (
+            <Note key={note.id} note={note} />
+            )
+          }) 
+        :
+        myNotes.map((note) => {
+          
           return (
           <Note key={note.id} note={note} />
           )
         }) 
-      :
-      myNotes.map((note) => {
-        
-        return (
-        <Note key={note.id} note={note} />
-        )
-      }) 
-      }
+        }
+      </div>
+      
     </div>
   );
 }

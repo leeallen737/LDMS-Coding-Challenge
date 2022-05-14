@@ -22,6 +22,8 @@ function App() {
   //   myFunction()
   const [lessThanSixMonths, updateLessThansixMonths] = React.useState(false)
   const [myNotes, updateMyNotes] = React.useState([])
+  const [myNote, updateMyNote] = React.useState('')
+  const [myName, updateMyName] = React.useState('')
 
   useEffect(() => {
     const getTasks = async () => {
@@ -40,14 +42,32 @@ function App() {
     return data
   }
 
-  const note = {
-    
-      id: 40,
-      createdAt: "2021-07-17T18:04:38.040Z",
-      user: "Lee Allen",
-      note: "Sit iusto odit amet itaque sequi error laudantium fugit aperiam accusamus et mollitia est et necessitatibus iusto maxime sunt sed incidunt ut saepe quidem aspernatur modi consectetur illum qui vero."
-    
+  //Add Note
+  const addNote = async (note) => {
+    const res = await fetch('http://localhost:5000/notes', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(note)
+    })
+
+    const data = await res.json()
+
+    updateMyNotes([...myNotes, data])
   }
+
+  //submit form
+
+  const submitForm = (e) => {
+    e.preventDefault()
+    console.log({myName, myNote})
+    addNote({myName, myNote})
+    updateMyName('')
+    updateMyNote('')
+  }
+
+  console.log(myNotes)
   
   let sixMonthsAgo = new Date();
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
@@ -91,7 +111,19 @@ function App() {
         }) 
         }
       </div>
-      
+      <form onSubmit={submitForm} className="my-form">
+        <label>Name</label>
+        <input 
+        value={myName}
+        onChange={(e) => updateMyName(e.target.value)} 
+        type="text"></input>
+        <label>Add Note</label>
+        <textarea 
+        value={myNote} 
+        onChange={(e) => updateMyNote(e.target.value)} 
+        type="text" />
+        <button >Add Note</button>
+      </form>
     </div>
   );
 }

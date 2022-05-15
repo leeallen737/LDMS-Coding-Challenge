@@ -25,6 +25,8 @@ function App() {
   const [myNote, updateMyNote] = React.useState('')
   const [myName, updateMyName] = React.useState('')
 
+  console.log(myName)
+
   useEffect(() => {
     const getTasks = async () => {
       const notesFromServer = await fetchNotes()
@@ -53,21 +55,22 @@ function App() {
     })
 
     const data = await res.json()
-
+    // console.log(data)
     updateMyNotes([...myNotes, data])
+    console.log(myNotes)
   }
 
   //submit form
 
-  const submitForm = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    console.log({myName, myNote})
+    // console.log({myName, myNote})
     addNote({myName, myNote})
     updateMyName('')
     updateMyNote('')
   }
 
-  console.log(myNotes)
+  // console.log(myNotes)
   
   let sixMonthsAgo = new Date();
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
@@ -87,7 +90,7 @@ function App() {
 
   const toggleNotes = () => {
     updateLessThansixMonths(prevState => !prevState)
-    console.log(lessThanSixMonths)
+    // console.log(lessThanSixMonths)
   }
 
   return (
@@ -111,14 +114,16 @@ function App() {
         }) 
         }
       </div>
-      <form onSubmit={submitForm} className="my-form">
-        <label>Name</label>
+      <form onSubmit={handleSubmit} className="my-form">
+        <label htmlFor="name">Name</label>
         <input 
+        id="name"
         value={myName}
         onChange={(e) => updateMyName(e.target.value)} 
         type="text"></input>
-        <label>Add Note</label>
-        <textarea 
+        <label htmlFor="my-note">Add Note</label>
+        <textarea
+        id="my-note" 
         value={myNote} 
         onChange={(e) => updateMyNote(e.target.value)} 
         type="text" />

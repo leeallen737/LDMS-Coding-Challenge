@@ -58,16 +58,26 @@ function App() {
     // console.log(data)
     updateMyNotes([...myNotes, data])
     console.log(myNotes)
+
   }
+
+  const date = new Date().toLocaleTimeString(
+    'en-gb',
+    {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }
+  );
 
   //submit form
 
   const handleSubmit = (e) => {
     e.preventDefault()
     // console.log({myName, myNote})
-    addNote({myName, myNote})
-    updateMyName('')
+    addNote({createdAt:date, user:myName, note: myNote})
     updateMyNote('')
+    updateMyName('')
   }
 
   // console.log(myNotes)
@@ -75,7 +85,7 @@ function App() {
   let sixMonthsAgo = new Date();
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-  const compareSixMonths = sixMonthsAgo.toLocaleDateString(
+  const compareSixMonths = sixMonthsAgo.toLocaleTimeString(
     'en-gb',
     {
       year: 'numeric',
@@ -114,21 +124,32 @@ function App() {
         }) 
         }
       </div>
-      <form onSubmit={handleSubmit} className="my-form">
-        <label htmlFor="name">Name</label>
+      <div id="container">
+      <form id="form" onSubmit={handleSubmit} className="my-form">
+      <div id="form-container">
         <input 
+        placeholder="name"
         id="name"
+        className="success"
         value={myName}
         onChange={(e) => updateMyName(e.target.value)} 
         type="text"></input>
-        <label htmlFor="my-note">Add Note</label>
+      </div>
+      <div id="form-container">
         <textarea
-        id="my-note" 
+        placeholder="Add note..."
+        id="my-note"
+        className="error"
         value={myNote} 
         onChange={(e) => updateMyNote(e.target.value)} 
         type="text" />
-        <button >Add Note</button>
+        <small id="error-note-required">The note is required</small>
+        <small id="error-500-exceeded">The note cannot exceed 500 characters</small>
+      </div>
+        <button id="submit">Submit</button>
       </form>
+        
+      </div>
     </div>
   );
 }

@@ -26,7 +26,7 @@ function App() {
   //so I created a mock backend using json-server installed in the frontend dependencies instead using port 5000. 'npm run server'.
   const [lessThanSixMonths, updateLessThansixMonths] = React.useState(false)
   const [myNotes, updateMyNotes] = React.useState([])
-  const [addNoteForm, updateAddNoteForm] = React.useState(true)
+  const [addNoteForm, updateAddNoteForm] = React.useState(false)
 
 
   //Fetch Notes from json-server backend

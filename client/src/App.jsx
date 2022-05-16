@@ -22,6 +22,10 @@ function App() {
   //   myFunction()
   const [lessThanSixMonths, updateLessThansixMonths] = React.useState(false)
   const [myNotes, updateMyNotes] = React.useState([])
+  const [myNote, updateMyNote] = React.useState('')
+  const [myName, updateMyName] = React.useState('')
+
+  console.log(myName)
 
   useEffect(() => {
     const getTasks = async () => {
@@ -40,19 +44,48 @@ function App() {
     return data
   }
 
-  const note = {
-    
-      id: 40,
-      createdAt: "2021-07-17T18:04:38.040Z",
-      user: "Lee Allen",
-      note: "Sit iusto odit amet itaque sequi error laudantium fugit aperiam accusamus et mollitia est et necessitatibus iusto maxime sunt sed incidunt ut saepe quidem aspernatur modi consectetur illum qui vero."
-    
+  //Add Note
+  const addNote = async (note) => {
+    const res = await fetch('http://localhost:5000/notes', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(note)
+    })
+
+    const data = await res.json()
+    // console.log(data)
+    updateMyNotes([...myNotes, data])
+    console.log(myNotes)
+
   }
+
+  const date = new Date().toLocaleTimeString(
+    'en-gb',
+    {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }
+  );
+
+  //submit form
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    // console.log({myName, myNote})
+    addNote({createdAt:date, user:myName, note: myNote})
+    updateMyNote('')
+    updateMyName('')
+  }
+
+  // console.log(myNotes)
   
   let sixMonthsAgo = new Date();
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-  const compareSixMonths = sixMonthsAgo.toLocaleDateString(
+  const compareSixMonths = sixMonthsAgo.toLocaleTimeString(
     'en-gb',
     {
       year: 'numeric',
@@ -67,7 +100,7 @@ function App() {
 
   const toggleNotes = () => {
     updateLessThansixMonths(prevState => !prevState)
-    console.log(lessThanSixMonths)
+    // console.log(lessThanSixMonths)
   }
 
   return (
@@ -91,7 +124,32 @@ function App() {
         }) 
         }
       </div>
-      
+      <div id="container">
+      <form id="form" onSubmit={handleSubmit} className="my-form">
+      <div id="form-container">
+        <input 
+        placeholder="name"
+        id="name"
+        className="success"
+        value={myName}
+        onChange={(e) => updateMyName(e.target.value)} 
+        type="text"></input>
+      </div>
+      <div id="form-container">
+        <textarea
+        placeholder="Add note..."
+        id="my-note"
+        className="error"
+        value={myNote} 
+        onChange={(e) => updateMyNote(e.target.value)} 
+        type="text" />
+        <small id="error-note-required">The note is required</small>
+        <small id="error-500-exceeded">The note cannot exceed 500 characters</small>
+      </div>
+        <button id="submit">Submit</button>
+      </form>
+        
+      </div>
     </div>
   );
 }

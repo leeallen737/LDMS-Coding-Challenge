@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react'
 import "./App.scss";
 import Note from './Components/Note'
-import Button from './Components/ToggleButton';
+import Button from './Components/Button';
+import Form from './Components/Form';
 // const { createProxyMiddleware } = require('http-proxy-middleware');
 function App() {
   // const apiProxy = createProxyMiddleware({
@@ -20,13 +21,15 @@ function App() {
   //   }  
 
   //   myFunction()
+
+  //couldn't get the backend from template working due to CORS but this attempted work around didn't mitigate.
+  //so I created a mock backend using json-server installed in the frontend dependencies instead using port 5000. 'npm run server'.
   const [lessThanSixMonths, updateLessThansixMonths] = React.useState(false)
   const [myNotes, updateMyNotes] = React.useState([])
-  const [myNote, updateMyNote] = React.useState('')
-  const [myName, updateMyName] = React.useState('')
+  const [addNoteForm, updateAddNoteForm] = React.useState(false)
 
-  console.log(myName)
 
+  //Fetch Notes from json-server backend
   useEffect(() => {
     const getTasks = async () => {
       const notesFromServer = await fetchNotes()
@@ -36,7 +39,6 @@ function App() {
     getTasks()
   }, [])
 
-  //Fetch Notes
   const fetchNotes = async () => {
     const res = await fetch('http://localhost:5000/notes')
     const data = await res.json()
@@ -55,7 +57,6 @@ function App() {
     })
 
     const data = await res.json()
-    // console.log(data)
     updateMyNotes([...myNotes, data])
     console.log(myNotes)
 
@@ -69,19 +70,8 @@ function App() {
       day: 'numeric'
     }
   );
-
-  //submit form
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // console.log({myName, myNote})
-    addNote({createdAt:date, user:myName, note: myNote})
-    updateMyNote('')
-    updateMyName('')
-  }
-
-  // console.log(myNotes)
   
+  //Created a date for 6 months ago
   let sixMonthsAgo = new Date();
   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
@@ -94,19 +84,23 @@ function App() {
     }
   );
 
+
+  //filter notes less than 6 months
   const myFilteredNotes = myNotes.filter((filteredNote) => {
     return Date.parse(filteredNote.createdAt) > Date.parse(compareSixMonths)
   })
 
+  //toggle button for toggle function
   const toggleNotes = () => {
     updateLessThansixMonths(prevState => !prevState)
-    // console.log(lessThanSixMonths)
   }
 
   return (
     <div className="App">
-      
-      <Button toggleNotes={toggleNotes} timeScale={lessThanSixMonths}/>
+      <header>
+        <Button clickFunction={toggleNotes} text={lessThanSixMonths ? 'All Notes' : 'Last 6 Months'}/>
+        <Button clickFunction={() => updateAddNoteForm(prevState => !prevState)} text='Add Note'/>
+      </header>
       
       <div className="notes">
           { lessThanSixMonths ? myFilteredNotes.map((note) => {
@@ -124,31 +118,9 @@ function App() {
         }) 
         }
       </div>
-      <div id="container">
-      <form id="form" onSubmit={handleSubmit} className="my-form">
-      <div id="form-container">
-        <input 
-        placeholder="name"
-        id="name"
-        className="success"
-        value={myName}
-        onChange={(e) => updateMyName(e.target.value)} 
-        type="text"></input>
-      </div>
-      <div id="form-container">
-        <textarea
-        placeholder="Add note..."
-        id="my-note"
-        className="error"
-        value={myNote} 
-        onChange={(e) => updateMyNote(e.target.value)} 
-        type="text" />
-        <small id="error-note-required">The note is required</small>
-        <small id="error-500-exceeded">The note cannot exceed 500 characters</small>
-      </div>
-        <button id="submit">Submit</button>
-      </form>
-        
+      <div id="container" className={addNoteForm ? 'reveal' : 'hide'} >
+      
+        <Form date={date} addNote={addNote}/>
       </div>
     </div>
   );

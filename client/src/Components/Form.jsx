@@ -6,6 +6,8 @@ import React from 'react'
     const [tooManyCharacters, updateTooManyCharacters] = React.useState(false)
     const [aNoteIsRequired, updateANoteIsRequired] = React.useState(false)
 
+
+  //form validation will trigger error colours and messages
   const checkCharacters = () => {
     if (myNote.length > 500) {
       updateTooManyCharacters(true)

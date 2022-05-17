@@ -1,3 +1,5 @@
+import PropTypes from "prop-types"
+
 const Button = ( {clickFunction, text} ) => {
     return (
     <header>
@@ -6,6 +8,11 @@ const Button = ( {clickFunction, text} ) => {
         </nav>
     </header>
     )
+}
+
+Button.propTypes = {
+  text: PropTypes.string,
+  clickFunction: PropTypes.func,
 }
 
 export default Button

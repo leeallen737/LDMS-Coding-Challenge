@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const Note = ( props ) => {
     return (
         <div className="my-note">
@@ -6,6 +8,12 @@ const Note = ( props ) => {
           <p>{props.note.note}</p>
         </div>
     )
+}
+
+Note.defaultProps = {
+  createdAt: PropTypes.string,
+  user: PropTypes.string,
+  note: PropTypes.string,
 }
 
 export default Note

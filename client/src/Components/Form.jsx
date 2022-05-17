@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 
     const Form = ( {addNote, date} ) => {
@@ -43,7 +44,7 @@ import React from 'react'
           <textarea
           placeholder="Add note..."
           id="my-note"
-          className={tooManyCharacters ? 'error' : ''}
+          className={aNoteIsRequired ? 'error' : '' || tooManyCharacters ? 'error' : ''}
           value={myNote} 
           onChange={(e) => updateMyNote(e.target.value)} 
           type="text" />
@@ -59,6 +60,11 @@ import React from 'react'
           <button id="submit">Submit</button>
         </form>
     )
+}
+
+Form.propTypes = {
+  addNote: PropTypes.func,
+  date: PropTypes.string,
 }
 
 export default Form
